@@ -1,0 +1,6 @@
+include "application"
+
+play.crypto.secret="samplesecret"
+
+moysklad.user = "youruser@yourdomain"
+moysklad.pass = "yourpassword"
