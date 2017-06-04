@@ -5,11 +5,12 @@ import javax.inject.Inject
 import play.api.libs.ws._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
-import com.google.inject.name.Named
-import services.moysklad.Auth
+import play.api.libs.json._
+import services.moysklad._
+
 
 trait Moysklad {
-  def getStocks
+  def getStocks: Future[StockResponse]
 }
 
 
@@ -23,16 +24,18 @@ extends Moysklad
 {
   private val baseUrl = "https://online.moysklad.ru/api/remap/1.1"
 
-  def getStocks = {
+  override def getStocks: Future[StockResponse] = {
 /*    print("username: ")
     println(auth.username)
     print("password: ")
     println(auth.password)*/
     val request = ws.url(baseUrl + "/report/stock/all")
         .withAuth(auth.username, auth.password, WSAuthScheme.BASIC)
+        .withHeaders(("Lognex-Pretty-Print-JSON", "true"))
     val response = request.execute()
     response map { response =>
-      println(response.body)
+      val jsonString: JsValue = Json.parse(response.body)
+      jsonString.as[StockResponse]
     }
   }
 }
