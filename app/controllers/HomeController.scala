@@ -21,9 +21,10 @@ class HomeController @Inject() (api: Moysklad)(implicit exec: ExecutionContext) 
    * a path of `/`.
    */
   def index = Action.async {
-    api.getStocks map { list =>
-      val str = list.rows.map(_.toString).mkString("\n")
-      Ok(list.meta.toString + str)
+    api.getStocks().map { list =>
+      val meta = list.meta
+      val grouped: Map[String, Int] = list.rows.groupBy(_.folder.name).mapValues(items => items.foldLeft(0)((s, i) => s + i.quantity))
+      Ok(meta.toString + grouped.toString())
     }
   }
 

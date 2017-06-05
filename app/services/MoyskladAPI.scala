@@ -6,11 +6,12 @@ import play.api.libs.ws._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import play.api.libs.json._
-import services.moysklad._
-
+import services.moysklad.{PagedResponse, _}
+import services.moysklad.reports._
+import services.moysklad.reports.Stock
 
 trait Moysklad {
-  def getStocks: Future[StockResponse]
+  def getStocks(request: StockRequest = StockRequest()): Future[StockResponse]
 }
 
 
@@ -24,16 +25,15 @@ extends Moysklad
 {
   private val baseUrl = "https://online.moysklad.ru/api/remap/1.1"
 
-  override def getStocks: Future[StockResponse] = {
-/*    print("username: ")
-    println(auth.username)
-    print("password: ")
-    println(auth.password)*/
-    val request = ws.url(baseUrl + "/report/stock/all")
-        .withAuth(auth.username, auth.password, WSAuthScheme.BASIC)
-        .withHeaders(("Lognex-Pretty-Print-JSON", "true"))
-    val response = request.execute()
-    response map { response =>
+  override def getStocks(req: StockRequest = StockRequest()): Future[StockResponse] = {
+    val stockRequest = new Stock(req)
+
+    val wsRequest = ws.url(baseUrl + stockRequest.endpoint)
+      .withAuth(auth.username, auth.password, WSAuthScheme.BASIC)
+      .withHeaders(("Lognex-Pretty-Print-JSON", "true"))
+      .withQueryString(stockRequest.queryString:_*)
+    val wsResponse = wsRequest.execute()
+    wsResponse map { response =>
       val jsonString: JsValue = Json.parse(response.body)
       jsonString.as[StockResponse]
     }

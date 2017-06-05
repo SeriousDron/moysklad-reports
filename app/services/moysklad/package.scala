@@ -10,32 +10,34 @@ import play.api.libs.functional.syntax._
 package object moysklad {
 
   case class Auth(username: String, password: String)
-  case class Meta(href: String, objType: String)
-  case class Folder(name: String, pathName: Option[String])
 
-  case class Stock(
-                    code: String,
-                    name: String,
-                    quantity: Int,
-                    folder: Folder
-                  )
+  class Meta(href: String, objType: String)
+  object Meta {
+    def apply(href: String, objType: String): Meta = new Meta(href, objType)
+  }
 
-  case class StockResponse(
-                            //context: Meta,
-                            meta: Meta,
-                            rows: Seq[Stock]
-                          )
+  case class MetaWithPaging(href: String, objType: String, size: Int, limit: Int, offset: Int) extends Meta(href, objType)
+
+  trait Request {
+
+  }
+  abstract class PagedRequest(val limit: Int = 100, val offset: Int = 0) extends Request {
+
+  }
+
+  abstract class Response(val meta: Meta)
+  case class PagedResponse[A](override val meta: MetaWithPaging, rows: Seq[A]) extends  Response(meta)
 
   implicit val metaReads: Reads[Meta] = (
     (JsPath \ "href").read[String] and
     (JsPath \ "type").read[String]
-  )(Meta.apply _)
+  ) (Meta.apply _)
 
-  implicit val folderReads: Reads[Folder] = (
-    (JsPath \ "name").read[String] and
-    (JsPath \ "pathName").readNullable[String]
-  )(Folder.apply _)
-
-  implicit val stockReads: Reads[Stock] = Json.reads[Stock]
-  implicit val stockResponseReads: Reads[StockResponse] = Json.reads[StockResponse]
+  implicit val metaWithPagingReads: Reads[MetaWithPaging] = (
+    (JsPath \ "href").read[String] and
+    (JsPath \ "type").read[String] and
+    (JsPath \ "size").read[Int] and
+    (JsPath \ "limit").read[Int] and
+    (JsPath \ "offset").read[Int]
+  ) (MetaWithPaging.apply _)
 }
