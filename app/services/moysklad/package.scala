@@ -26,7 +26,15 @@ package object moysklad {
   }
 
   abstract class Response(val meta: Meta)
-  case class PagedResponse[A](override val meta: MetaWithPaging, rows: Seq[A]) extends  Response(meta)
+  case class PagedResponse[A](override val meta: MetaWithPaging, rows: Seq[A]) extends  Response(meta) {
+    def ++(other: PagedResponse[A]) : PagedResponse[A] = {
+      if (other.meta.offset > meta.offset && other.meta.offset < (meta.offset + meta.limit)) throw new IllegalArgumentException
+      val start = meta.offset min other.meta.offset
+      val end = (meta.offset + meta.limit) max (other.meta.offset + other.meta.limit)
+      val newMeta = MetaWithPaging(meta.href, meta.objType, meta.size, meta.limit, start)
+      PagedResponse(newMeta, rows ++ other.rows)
+    }
+  }
 
   implicit val metaReads: Reads[Meta] = (
     (JsPath \ "href").read[String] and
@@ -40,4 +48,12 @@ package object moysklad {
     (JsPath \ "limit").read[Int] and
     (JsPath \ "offset").read[Int]
   ) (MetaWithPaging.apply _)
+
+  def pagedResponseReads[E]()(implicit readsE: Reads[E]): Reads[PagedResponse[E]] = new Reads[PagedResponse[E]] {
+    override def reads(json: JsValue): JsResult[PagedResponse[E]] = {
+      val meta = (json \ "meta").as[MetaWithPaging]
+      val rows = (json \ "rows").as[Seq[E]]
+      JsSuccess(PagedResponse(meta, rows))
+    }
+  }
 }

@@ -2,9 +2,10 @@ package controllers
 
 import javax.inject._
 
-import play.api._
 import play.api.mvc._
 import services.Moysklad
+import services.moysklad.reports.Folder
+
 import scala.concurrent.ExecutionContext
 
 /**
@@ -23,7 +24,7 @@ class HomeController @Inject() (api: Moysklad)(implicit exec: ExecutionContext) 
   def index = Action.async {
     api.getStocks().map { list =>
       val meta = list.meta
-      val grouped: Map[String, Int] = list.rows.groupBy(_.folder.name).mapValues(items => items.foldLeft(0)((s, i) => s + i.quantity))
+      val grouped: Map[Option[Folder], Int] = list.rows.groupBy(_.folder).mapValues(items => items.foldLeft(0)((s, i) => s + i.quantity))
       Ok(meta.toString + grouped.toString())
     }
   }

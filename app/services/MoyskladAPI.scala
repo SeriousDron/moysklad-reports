@@ -11,7 +11,7 @@ import services.moysklad.reports._
 import services.moysklad.reports.Stock
 
 trait Moysklad {
-  def getStocks(request: StockRequest = StockRequest()): Future[StockResponse]
+  def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[StockRow]]
 }
 
 
@@ -25,7 +25,7 @@ extends Moysklad
 {
   private val baseUrl = "https://online.moysklad.ru/api/remap/1.1"
 
-  override def getStocks(req: StockRequest = StockRequest()): Future[StockResponse] = {
+  override def getStocks(req: StockRequest = StockRequest()): Future[PagedResponse[StockRow]] = {
     val stockRequest = new Stock(req)
 
     val wsRequest = ws.url(baseUrl + stockRequest.endpoint)
@@ -35,7 +35,7 @@ extends Moysklad
     val wsResponse = wsRequest.execute()
     wsResponse map { response =>
       val jsonString: JsValue = Json.parse(response.body)
-      jsonString.as[StockResponse]
+      jsonString.as[PagedResponse[StockRow]]
     }
   }
 }

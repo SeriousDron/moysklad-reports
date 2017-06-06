@@ -9,5 +9,5 @@ package object reports {
 
   implicit val folderReads: Reads[Folder] = Json.reads[Folder]
   implicit val stockReads: Reads[StockRow] = Json.reads[StockRow]
-  implicit val stockResponseReads: Reads[StockResponse] = Json.reads[StockResponse]
+  implicit val stockResponseReads: Reads[PagedResponse[StockRow]] = pagedResponseReads[StockRow]()
 }

@@ -29,7 +29,7 @@ case class StockRow(
                   code: String,
                   name: String,
                   quantity: Int,
-                  folder: Folder
+                  folder: Option[Folder]
                 )
 
 case class StockResponse (
