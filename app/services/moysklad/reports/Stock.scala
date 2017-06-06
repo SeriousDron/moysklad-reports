@@ -5,7 +5,7 @@ import services.moysklad._
 /**
   * Created by Андрей on 05.06.2017.
   */
-class Stock(override val request: StockRequest) extends PagedEntity[StockRow](request) {
+class Stock(request: StockRequest) extends PagedEntity[StockRow](request) {
   override val endpoint =  "/report/stock/all"
 }
 

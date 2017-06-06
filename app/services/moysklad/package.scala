@@ -21,8 +21,16 @@ package object moysklad {
   trait Request {
 
   }
-  abstract class PagedRequest(val limit: Int = 100, val offset: Int = 0) extends Request {
-
+  abstract class PagedRequest(__limit: Int = 100, __offset: Int = 0) extends Request with Cloneable {
+    private var _limit: Int = __limit
+    private var _offset: Int = __offset
+    def limit(): Int = this._limit
+    def offset(): Int = this._offset
+    def next: this.type = {
+      val cl: this.type = this.clone().asInstanceOf[this.type]
+      cl._offset = this.offset + this.limit
+      cl
+    }
   }
 
   abstract class Response(val meta: Meta)
@@ -31,7 +39,7 @@ package object moysklad {
       if (other.meta.offset > meta.offset && other.meta.offset < (meta.offset + meta.limit)) throw new IllegalArgumentException
       val start = meta.offset min other.meta.offset
       val end = (meta.offset + meta.limit) max (other.meta.offset + other.meta.limit)
-      val newMeta = MetaWithPaging(meta.href, meta.objType, meta.size, meta.limit, start)
+      val newMeta = MetaWithPaging(meta.href, meta.objType, meta.size, end - start, start)
       PagedResponse(newMeta, rows ++ other.rows)
     }
   }

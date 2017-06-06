@@ -27,15 +27,33 @@ extends Moysklad
 
   override def getStocks(req: StockRequest = StockRequest()): Future[PagedResponse[StockRow]] = {
     val stockRequest = new Stock(req)
+    all(stockRequest)
+  }
 
-    val wsRequest = ws.url(baseUrl + stockRequest.endpoint)
+  private def all[A](request: PagedEntity[A])(implicit fjs: Reads[PagedResponse[A]]): Future[PagedResponse[A]] = {
+    def addData(curData: Future[PagedResponse[A]], prevReq: PagedEntity[A]): Future[PagedResponse[A]] = {
+      curData.flatMap(response => {
+        if (response.meta.size <= response.meta.offset + response.meta.limit) {
+          curData
+        } else {
+          val newReq = prevReq.next
+          addData(sendRequest(newReq).map(response ++ _), newReq)
+        }
+      })
+    }
+    val first: Future[PagedResponse[A]] = sendRequest(request)
+    addData(first, request)
+  }
+
+  private def sendRequest[A <: Response](request: Entity[A])(implicit fjs: Reads[A]) : Future[A] = {
+    val wsRequest = ws.url(baseUrl + request.endpoint)
       .withAuth(auth.username, auth.password, WSAuthScheme.BASIC)
       .withHeaders(("Lognex-Pretty-Print-JSON", "true"))
-      .withQueryString(stockRequest.queryString:_*)
+      .withQueryString(request.queryString:_*)
     val wsResponse = wsRequest.execute()
     wsResponse map { response =>
       val jsonString: JsValue = Json.parse(response.body)
-      jsonString.as[PagedResponse[StockRow]]
+      jsonString.as[A](fjs)
     }
   }
 }
