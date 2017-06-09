@@ -8,6 +8,6 @@ import play.api.libs.json._
 package object reports {
 
   implicit val folderReads: Reads[Folder] = Json.reads[Folder]
-  implicit val stockReads: Reads[StockRow] = Json.reads[StockRow]
-  implicit val stockResponseReads: Reads[PagedResponse[StockRow]] = pagedResponseReads[StockRow]()
+  implicit val stockReads: Reads[Stock] = Json.reads[Stock]
+  implicit val stockResponseReads: Reads[PagedResponse[Stock]] = pagedResponseReads[Stock]()
 }

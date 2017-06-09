@@ -4,7 +4,7 @@ import javax.inject._
 
 import play.api.mvc._
 import services.Moysklad
-import services.moysklad.reports.{Folder, StockRow}
+import services.moysklad.reports.{Folder, Stock}
 
 import scala.concurrent.ExecutionContext
 
@@ -24,7 +24,7 @@ class HomeController @Inject() (api: Moysklad)(implicit exec: ExecutionContext) 
   def index = Action.async {
     api.getStocks().map { list =>
       val size = list.meta.size
-      val grouped: Map[String, Seq[StockRow]] = list.rows.groupBy(_.folder match {
+      val grouped: Map[String, Seq[Stock]] = list.rows.groupBy(_.folder match {
         case None => "Без группы"
         case Some(folder) => folder.name
       })
@@ -34,7 +34,7 @@ class HomeController @Inject() (api: Moysklad)(implicit exec: ExecutionContext) 
     }
   }
 
-  private def groupStat(stocks: Seq[StockRow]) : (Int, Int) = {
+  private def groupStat(stocks: Seq[Stock]) : (Int, Int) = {
     val size = stocks.size
     val count = stocks.foldLeft(0)((sum, stock) => sum + stock.quantity)
     (size, count)

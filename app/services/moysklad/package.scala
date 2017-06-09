@@ -1,5 +1,9 @@
 package services
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
+
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
@@ -17,21 +21,6 @@ package object moysklad {
   }
 
   case class MetaWithPaging(href: String, objType: String, size: Int, limit: Int, offset: Int) extends Meta(href, objType)
-
-  trait Request {
-
-  }
-  abstract class PagedRequest(__limit: Int = 100, __offset: Int = 0) extends Request with Cloneable {
-    private var _limit: Int = __limit
-    private var _offset: Int = __offset
-    def limit(): Int = this._limit
-    def offset(): Int = this._offset
-    def next: this.type = {
-      val cl: this.type = this.clone().asInstanceOf[this.type]
-      cl._offset = this.offset + this.limit
-      cl
-    }
-  }
 
   abstract class Response(val meta: Meta)
   case class PagedResponse[A](override val meta: MetaWithPaging, rows: Seq[A]) extends  Response(meta) {

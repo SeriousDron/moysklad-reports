@@ -11,7 +11,7 @@ import services.moysklad.reports._
 import services.moysklad.reports.Stock
 
 trait Moysklad {
-  def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[StockRow]]
+  def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[Stock]]
 }
 
 
@@ -25,13 +25,12 @@ extends Moysklad
 {
   private val baseUrl = "https://online.moysklad.ru/api/remap/1.1"
 
-  override def getStocks(req: StockRequest = StockRequest()): Future[PagedResponse[StockRow]] = {
-    val stockRequest = new Stock(req)
-    all(stockRequest)
+  override def getStocks(req: StockRequest = StockRequest()): Future[PagedResponse[Stock]] = {
+    all(req)
   }
 
-  private def all[A](request: PagedEntity[A])(implicit fjs: Reads[PagedResponse[A]]): Future[PagedResponse[A]] = {
-    def addData(curData: Future[PagedResponse[A]], prevReq: PagedEntity[A]): Future[PagedResponse[A]] = {
+  private def all[A](request: PagedRequest[A])(implicit fjs: Reads[PagedResponse[A]]): Future[PagedResponse[A]] = {
+    def addData(curData: Future[PagedResponse[A]], prevReq: PagedRequest[A]): Future[PagedResponse[A]] = {
       curData.flatMap(response => {
         if (response.meta.size <= response.meta.offset + response.meta.limit) {
           curData
@@ -45,7 +44,7 @@ extends Moysklad
     addData(first, request)
   }
 
-  private def sendRequest[A <: Response](request: Entity[A])(implicit fjs: Reads[A]) : Future[A] = {
+  private def sendRequest[A <: Response](request: Request[A])(implicit fjs: Reads[A]) : Future[A] = {
     val wsRequest = ws.url(baseUrl + request.endpoint)
       .withAuth(auth.username, auth.password, WSAuthScheme.BASIC)
       .withHeaders(("Lognex-Pretty-Print-JSON", "true"))
