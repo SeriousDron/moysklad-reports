@@ -3,7 +3,7 @@ import java.time.Clock
 
 import play.api.{Configuration, Environment}
 import services._
-import services.moysklad.Auth
+import services.moysklad.{Auth, ProductRegistry, ProductRegistryImpl}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -36,6 +36,8 @@ class Module(
         configuration.getString("moysklad.user").getOrElse(""),
         configuration.getString("moysklad.pass").getOrElse("")
       ))
+
+    bind(classOf[ProductRegistry]).to(classOf[ProductRegistryImpl]).asEagerSingleton()
   }
 
 }

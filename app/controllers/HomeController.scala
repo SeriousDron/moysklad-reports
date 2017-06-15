@@ -4,6 +4,7 @@ import javax.inject._
 
 import play.api.mvc._
 import services.Moysklad
+import services.moysklad.ProductRegistry
 import services.moysklad.reports.{Folder, Stock}
 
 import scala.concurrent.ExecutionContext
@@ -13,7 +14,7 @@ import scala.concurrent.ExecutionContext
  * application's home page.
  */
 @Singleton
-class HomeController @Inject() (api: Moysklad)(implicit exec: ExecutionContext) extends Controller {
+class HomeController @Inject()(api: Moysklad, products: ProductRegistry)(implicit exec: ExecutionContext) extends Controller {
 
   /**
    * Create an Action to render an HTML page with a welcome message.

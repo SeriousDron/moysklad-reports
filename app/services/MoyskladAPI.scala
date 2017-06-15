@@ -6,12 +6,16 @@ import play.api.libs.ws._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import play.api.libs.json._
+import services.moysklad.documents.{RetailDemand, RetailDemandRequest}
 import services.moysklad.{PagedResponse, _}
 import services.moysklad.reports._
 import services.moysklad.reports.Stock
+import services.moysklad.entity.{Product, ProductsRequest}
 
 trait Moysklad {
   def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[Stock]]
+  def getRetailDemand(request: RetailDemandRequest): Future[PagedResponse[RetailDemand]]
+  def getProducts(request: ProductsRequest): Future[PagedResponse[Product]]
 }
 
 
@@ -26,6 +30,14 @@ extends Moysklad
   private val baseUrl = "https://online.moysklad.ru/api/remap/1.1"
 
   override def getStocks(req: StockRequest = StockRequest()): Future[PagedResponse[Stock]] = {
+    all(req)
+  }
+
+  override def getRetailDemand(req: RetailDemandRequest): Future[PagedResponse[RetailDemand]] = {
+    all(req)
+  }
+
+  override def getProducts(req: ProductsRequest = ProductsRequest()): Future[PagedResponse[Product]] = {
     all(req)
   }
 
