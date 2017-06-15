@@ -10,7 +10,7 @@ abstract class Request[A <: Response] {
   def endpoint: String
   def queryString: Seq[(String, String)]
 
-  private val dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")
+  private val dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd 00:00:00")
   protected def formatDateTime(date: TemporalAccessor): String = dateFormatter.format(date)
 }
 
