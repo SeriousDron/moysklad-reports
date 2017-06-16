@@ -15,12 +15,13 @@ package object moysklad {
 
   case class Auth(username: String, password: String)
 
-  class Meta(href: String, objType: String)
+  class Meta(val href: String, val objType: String)
   object Meta {
     def apply(href: String, objType: String): Meta = new Meta(href, objType)
   }
 
-  case class MetaWithPaging(href: String, objType: String, size: Int, limit: Int, offset: Int) extends Meta(href, objType)
+  case class MetaWithPaging(override val href: String, override val objType: String, size: Int, limit: Int, offset: Int) extends Meta(href, objType)
+  case class WrappedMeta(meta: Meta)
 
   abstract class Response(val meta: Meta)
   case class PagedResponse[A](override val meta: MetaWithPaging, rows: Seq[A]) extends  Response(meta) {
@@ -45,6 +46,8 @@ package object moysklad {
     (JsPath \ "limit").read[Int] and
     (JsPath \ "offset").read[Int]
   ) (MetaWithPaging.apply _)
+
+  implicit val wrappedMetaReads: Reads[WrappedMeta] = Json.reads[WrappedMeta]
 
   def pagedResponseReads[E]()(implicit readsE: Reads[E]): Reads[PagedResponse[E]] = new Reads[PagedResponse[E]] {
     override def reads(json: JsValue): JsResult[PagedResponse[E]] = {

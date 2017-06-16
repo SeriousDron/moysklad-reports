@@ -20,12 +20,11 @@ class RetailDemandRequest(updatedFrom: LocalDate, updatedTo: LocalDate = LocalDa
     )
   }
 }
-//case class Assortment()
-case class Position(meta: Meta, price: Int)
+
+case class Position(assortment: WrappedMeta, price: Int, quantity: Int)
 case class RetailDemand(id: String, positions: PagedResponse[Position])
 
 object RetailDemand {
-//  implicit val assortmentReads: Reads[Assortment] = Json.reads[Assortment]
   implicit val positionReads: Reads[Position] = Json.reads[Position]
   implicit val positionResponseReads: Reads[PagedResponse[Position]] = pagedResponseReads[Position]()
   implicit val retailDemandReads: Reads[RetailDemand] = Json.reads[RetailDemand]
