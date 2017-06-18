@@ -13,8 +13,8 @@ trait ProductRegistry extends Map[String, Product]
 @Singleton
 class ProductRegistryImpl @Inject() (moyskladApi: MoyskladAPI) extends ProductRegistry {
 
-  val response: PagedResponse[Product] = Await.result(moyskladApi.getProducts(), Duration(10, SECONDS))
-  val products: Map[String, Product] = response.rows.map(p => (p.id, p)).toMap
+  val response: PagedResponse[Product] = Await.result(moyskladApi.getProducts(), Duration(30, SECONDS))
+  val products: Map[String, Product] = response.rows.map(p => (p.meta.href, p)).toMap
 
   override def get(key: String): Option[Product] = products.get(key)
   override def iterator: Iterator[(String, Product)] = products.iterator
