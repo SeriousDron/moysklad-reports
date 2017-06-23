@@ -2,7 +2,7 @@
  * This template takes a single argument, a String containing a
  * message to display.
  *@
-@(size: Int, groups: Seq[(String, (Int, Int))])
+@(size: Int, groups: Seq[(String, Int, Int, Int)])
 
 @*
  * Call the `main` template with two arguments. The first
@@ -14,16 +14,22 @@
  <h1>@size видов товаров в наличии</h1>
  <table class="table table-hover">
   <thead>
-  <th>Вид пива</th>
-  <th>Видов в наличии</th>
-  <th>Бутылок в наличии</th>
+  <tr>
+   <th>Вид пива</th>
+   <th>Видов в наличии</th>
+   <th>Бутылок в наличии</th>
+   <th>Бутылок куплено</th>
+  </tr>
   </thead>
- @for((group, stat) <- groups) {
- <tr>
-  <td>@group</td>
-  <td>@stat._1</td>
-  <td>@stat._2</td>
- </tr>
- }
+  <tbody>
+   @for(group <- groups) {
+   <tr>
+    <td>@group._1</td>
+    <td>@group._2</td>
+    <td>@group._3</td>
+    <td>@group._4</td>
+   </tr>
+   }
+ </tbody>
  </table>
 }

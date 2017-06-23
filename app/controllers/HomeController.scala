@@ -3,9 +3,9 @@ package controllers
 import javax.inject._
 
 import play.api.mvc._
+import reports.{FolderStat, PurchasePlanning}
 import services.Moysklad
-import services.moysklad.ProductRegistry
-import services.moysklad.reports.{Folder, Stock}
+import services.moysklad.FolderRegistry
 
 import scala.concurrent.ExecutionContext
 
@@ -14,16 +14,25 @@ import scala.concurrent.ExecutionContext
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(api: Moysklad, products: ProductRegistry)(implicit exec: ExecutionContext) extends Controller {
+class HomeController @Inject()(api: Moysklad, purchasePlanning: PurchasePlanning, folderRegistry: FolderRegistry)(implicit exec: ExecutionContext) extends Controller {
 
-  /**
-   * Create an Action to render an HTML page with a welcome message.
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
   def index = Action.async {
-    api.getStocks().map { list =>
+
+    purchasePlanning.buildReport().map(report => Ok(
+      views.html.index.render(
+        report.foldLeft(0)(_ + _.kinds),
+        report.sortWith(folderStatLt).map(fs => {
+          val st = FolderStat.unapply(fs).get
+          val folder = st._1 match {
+            case None => "Без категории"
+            case Some(href) => folderRegistry(href).name
+          }
+          (folder, st._2, st._3, st._4)
+        })
+      )
+    ))
+
+    /*api.getStocks().map { list =>
       val size = list.meta.size
       val grouped: Map[String, Seq[Stock]] = list.rows.groupBy(_.folder match {
         case None => "Без группы"
@@ -31,13 +40,14 @@ class HomeController @Inject()(api: Moysklad, products: ProductRegistry)(implici
       })
       val stat = grouped.mapValues(groupStat).toSeq.sortWith(_._2._2 < _._2._2)
 
-      Ok(views.html.index.render(size, stat))
-    }
+
+    }*/
   }
 
-  private def groupStat(stocks: Seq[Stock]) : (Int, Int) = {
-    val size = stocks.size
-    val count = stocks.foldLeft(0)((sum, stock) => sum + stock.quantity)
-    (size, count)
+  private def folderStatLt(fs1: FolderStat, fs2: FolderStat) : Boolean = {
+    val predict1 = fs1.stock.toDouble / fs1.sales.toDouble
+    val predict2 = fs2.stock.toDouble / fs2.sales.toDouble
+    predict1 < predict2
   }
+
 }
