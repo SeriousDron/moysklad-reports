@@ -32,7 +32,7 @@ class PurchasePlanning @Inject() (moyskladApi: MoyskladAPI, productRegistry: Pro
   protected def getStockStat: Future[Map[Option[String], (Int, Int)]] = {
     val stocks = moyskladApi.getStocks()
     stocks.map(response =>
-      response.rows.groupBy(_.folder.map(_.meta.href)).mapValues(groupStat)
+      response.rows.groupBy(_.folder.map(_.meta.href)).mapValues(groupStat).withDefaultValue((0, 0))
     )
   }
 
