@@ -1,6 +1,7 @@
 package services.moysklad.reports
 
 import services.moysklad._
+import services.moysklad.entity.Folder
 
 /**
   * Created by Андрей on 05.06.2017.
@@ -22,7 +23,6 @@ object StockMode {
   val PositiveOnly = new StockMode{ val name = "positiveOnly" }
 }
 
-case class Folder(name: String, pathName: Option[String])
 case class Stock(
                   code: String,
                   name: String,

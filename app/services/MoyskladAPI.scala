@@ -10,12 +10,13 @@ import services.moysklad.documents.{RetailDemand, RetailDemandRequest}
 import services.moysklad.{PagedResponse, _}
 import services.moysklad.reports._
 import services.moysklad.reports.Stock
-import services.moysklad.entity.{Product, ProductsRequest}
+import services.moysklad.entity._
 
 trait Moysklad {
   def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[Stock]]
   def getRetailDemand(request: RetailDemandRequest): Future[PagedResponse[RetailDemand]]
   def getProducts(request: ProductsRequest): Future[PagedResponse[Product]]
+  def getFolders(request: FoldersRequest): Future[PagedResponse[Folder]]
 }
 
 
@@ -38,6 +39,10 @@ extends Moysklad
   }
 
   override def getProducts(req: ProductsRequest = ProductsRequest()): Future[PagedResponse[Product]] = {
+    all(req)
+  }
+
+  override def getFolders(req: FoldersRequest = FoldersRequest()) : Future[PagedResponse[Folder]] = {
     all(req)
   }
 
