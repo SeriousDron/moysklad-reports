@@ -11,6 +11,9 @@ sealed trait Attribute {
 
 object Attribute {
 
+  final val TypeBoolean = "boolean"
+  final val TypeCustomEntity = "customentity"
+
   implicit val customEntityAttributeReads: Reads[CustomEntityValue] = Json.reads[CustomEntityValue]
 
   implicit val attributeReads: Reads[Attribute] = new Reads[Attribute] {
@@ -18,8 +21,8 @@ object Attribute {
       val name = (json \ "name").as[String]
       val objType = (json \ "type").as[String]
       objType match {
-        case "boolean" => JsSuccess(BooleanAttribute(objType, name, (json \ "value").as[Boolean]))
-        case "customentity" => JsSuccess(CustomEntityAttribute(objType, name, (json \ "value").as[CustomEntityValue]))
+        case TypeBoolean => JsSuccess(BooleanAttribute(objType, name, (json \ "value").as[Boolean]))
+        case TypeCustomEntity => JsSuccess(CustomEntityAttribute(objType, name, (json \ "value").as[CustomEntityValue]))
       }
     }
   }
