@@ -11,7 +11,7 @@ object ProductsRequest {
   def apply(): ProductsRequest = new ProductsRequest
 }
 
-case class Product(meta: Meta, id: String, name: String, productFolder: Option[WrappedMeta])
+case class Product(meta: Meta, id: String, name: String, productFolder: Option[WrappedMeta], attributes: Option[Seq[Attribute]])
 
 object Product {
   implicit val productReads: Reads[Product] = Json.reads[Product]
