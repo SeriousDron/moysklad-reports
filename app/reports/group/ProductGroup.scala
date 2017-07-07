@@ -1,7 +1,9 @@
 package reports.group
 
+import javax.inject.{Inject, Singleton}
+
 import services.moysklad.entity._
-import services.moysklad.FolderRegistry
+import services.moysklad.{FolderRegistry, ProductRegistry}
 
 
 trait ProductGroup[T] {
@@ -13,20 +15,19 @@ class FolderGroup(folderRegistry: FolderRegistry) extends ProductGroup[Option[St
 
   override def groupBy(product: Product): Option[String] = product.productFolder map (_.meta.href)
 
-  override def groupName(id: Option[String]): String = {
-    case None => "Без категории"
+  override def groupName(id: Option[String]): String = id match {
     case Some(folder) => folderRegistry(folder).name
+    case _ => "Без категории"
   }
 }
 
 class CustomEntityAttributeGroup(name: String) extends ProductGroup[Option[String]] {
 
-  override def groupBy(product: Product): Option[String] = product.attributes map { attrs =>
-    attrs.filter({
-      case CustomEntityAttribute(_, attrName, _) if name == attrName => true
-      case _ => false
-    }).head.name
-  }
+  override def groupBy(product: Product): Option[String] = product.attributes.flatMap( attr =>
+    attr.collectFirst({
+      case CustomEntityAttribute(_, attrName, value) if name == attrName => value.name
+    })
+  )
 
   override def groupName(id: Option[String]): String = id getOrElse "Не указано"
 }

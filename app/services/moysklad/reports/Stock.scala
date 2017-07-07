@@ -24,6 +24,7 @@ object StockMode {
 }
 
 case class Stock(
+                  meta: Meta,
                   code: String,
                   name: String,
                   quantity: Int,
