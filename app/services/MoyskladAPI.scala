@@ -16,6 +16,7 @@ trait Moysklad {
   def getStocks(request: StockRequest = StockRequest()): Future[PagedResponse[Stock]]
   def getRetailDemand(request: RetailDemandRequest): Future[PagedResponse[RetailDemand]]
   def getProducts(request: ProductsRequest): Future[PagedResponse[Product]]
+  def getProductsMetadata(request: ProductMetadataRequest): Future[ProductMetadata]
   def getFolders(request: FoldersRequest): Future[PagedResponse[Folder]]
 }
 
@@ -40,6 +41,10 @@ extends Moysklad
 
   override def getProducts(req: ProductsRequest = ProductsRequest()): Future[PagedResponse[Product]] = {
     all(req)
+  }
+
+  override def getProductsMetadata(req: ProductMetadataRequest = ProductMetadataRequest()): Future[ProductMetadata] = {
+    sendRequest(req)
   }
 
   override def getFolders(req: FoldersRequest = FoldersRequest()) : Future[PagedResponse[Folder]] = {
