@@ -11,7 +11,12 @@ object ProductsRequest {
   def apply(): ProductsRequest = new ProductsRequest
 }
 
-case class Product(meta: Meta, id: String, name: String, productFolder: Option[WrappedMeta], attributes: Option[Seq[Attribute]])
+case class Product(
+                    meta: Meta,
+                    id: String,
+                    name: String,
+                    productFolder: Option[WrappedMeta],
+                    attributes: Option[Seq[Attribute]]) extends Entity
 
 object Product {
   implicit val productReads: Reads[Product] = Json.reads[Product]

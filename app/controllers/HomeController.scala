@@ -6,8 +6,8 @@ import play.api.mvc._
 import reports.group.{CustomEntityAttributeGroup, FolderGroup, ProductGroup}
 import reports.{FolderStat, PurchasePlanning}
 import services.Moysklad
-import services.moysklad.FolderRegistry
 import play.api.i18n.{I18nSupport, MessagesApi}
+import services.moysklad.registry.FolderRegistry
 
 import scala.concurrent.ExecutionContext
 

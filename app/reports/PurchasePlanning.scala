@@ -6,10 +6,10 @@ import javax.inject.Inject
 
 import reports.group.ProductGroup
 import services.MoyskladAPI
-import services.moysklad.ProductRegistry
 import services.moysklad.documents.RetailDemandRequest
 import services.moysklad.reports.Stock
 import services.moysklad.entity.Product
+import services.moysklad.registry.ProductRegistry
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -3,7 +3,8 @@ import java.time.Clock
 
 import play.api.{Configuration, Environment}
 import services._
-import services.moysklad.{Auth, FolderRegistry, FolderRegistryImpl, ProductRegistry, ProductRegistryImpl}
+import services.moysklad.registry.{FolderRegistry, FolderRegistryImpl, ProductRegistry, ProductRegistryImpl}
+import services.moysklad.Auth
 
 /**
  * This class is a Guice module that tells Guice how to bind several

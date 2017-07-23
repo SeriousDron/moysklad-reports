@@ -11,7 +11,7 @@ object FoldersRequest {
   def apply(): FoldersRequest = new FoldersRequest
 }
 
-case class Folder(meta: Meta, name: String, pathName: Option[String])
+case class Folder(meta: Meta, name: String, pathName: Option[String]) extends Entity
 
 object Folder {
   implicit val folderReads: Reads[Folder] = Json.reads[Folder]

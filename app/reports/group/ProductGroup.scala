@@ -3,7 +3,7 @@ package reports.group
 import javax.inject.{Inject, Singleton}
 
 import services.moysklad.entity._
-import services.moysklad.{FolderRegistry, ProductRegistry}
+import services.moysklad.registry.{FolderRegistry, ProductRegistry}
 
 
 trait ProductGroup[T] {
