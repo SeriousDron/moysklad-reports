@@ -7,14 +7,21 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 
-abstract class Registry[E <: Entity](resultFuture: Future[PagedResponse[E]]) extends Map[String, E] {
+abstract class Registry[E <: Entity](fetchAllFunc: => Future[PagedResponse[E]]) extends Map[String, E] {
 
-  val response: PagedResponse[E] = Await.result(resultFuture, 30.seconds)
-  val items: Map[String, E] = response.rows.map(p => (p.meta.href, p)).toMap
+  private var items: Map[String, E] = refreshItems()
+
+  private def refreshItems(): Map[String, E] = {
+    val response: PagedResponse[E] = Await.result(fetchAllFunc, 30.seconds)
+    response.rows.map(p => (p.meta.href, p)).toMap
+  }
 
   override def get(key: String): Option[E] = { //Ignoring query params
   val qPos = key.indexOf('?')
     val href = if (qPos != -1) key.substring(0, qPos) else key
+    if (!items.contains(href)) {
+      items = refreshItems()
+    }
     items.get(href)
   }
 
