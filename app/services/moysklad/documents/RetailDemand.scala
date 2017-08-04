@@ -9,7 +9,7 @@ import services.moysklad._
 /**
   * Created by Андрей on 08.06.2017.
   */
-class RetailDemandRequest(updatedFrom: LocalDate, updatedTo: LocalDate = LocalDate.now()) extends PagedRequest[RetailDemand](){
+class RetailDemandRequest(val updatedFrom: LocalDate, val updatedTo: LocalDate = LocalDate.now()) extends PagedRequest[RetailDemand](){
   override val endpoint: String = "/entity/retaildemand"
 
   override def queryString: Seq[(String, String)] = {

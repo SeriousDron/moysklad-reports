@@ -37,7 +37,7 @@ extends Moysklad
   }
 
   override def getRetailDemand(req: RetailDemandRequest): Future[PagedResponse[RetailDemand]] = {
-    all(req)
+    all(req) map { result => result.filter(_.moment.isAfter(req.updatedFrom.atStartOfDay()))}
   }
 
   override def getProducts(req: ProductsRequest = ProductsRequest()): Future[PagedResponse[Product]] = {

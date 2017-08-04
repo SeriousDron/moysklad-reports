@@ -33,6 +33,8 @@ package object moysklad {
       val newMeta = MetaWithPaging(meta.href, meta.objType, meta.size, end - start, start)
       PagedResponse(newMeta, rows ++ other.rows)
     }
+
+    def filter(p: (A) => Boolean): PagedResponse[A] = PagedResponse[A](meta, rows.filter(p))
   }
 
   implicit val metaReads: Reads[Meta] = (
