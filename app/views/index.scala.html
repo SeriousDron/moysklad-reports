@@ -6,32 +6,16 @@
  * argument is an `Html` object containing the body of the page.
  *@
 @main("Welcome to Play") {
+ <h2>Планирование закупок</h2>
+ <div class="container-fluid">
+   <ul class="nav nav-pills">
+    <li role="presentation"@if(request.path == routes.HomeController.index.toString()){ class="active"}><a href="@routes.HomeController.index">По папкам</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.buy.toString()){ class="active"}><a href="@routes.HomeController.buy">По закупочной категории</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.manufacture.toString()){ class="active"}><a href="@routes.HomeController.manufacture">По производителю</a></li>
+   </ul>
+ </div>
 
- <nav class="navbar navbar-default">
-  <div class="container-fluid">
-   <!-- Brand and toggle get grouped for better mobile display -->
-   <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-     <span class="sr-only">Toggle navigation</span>
-     <span class="icon-bar"></span>
-     <span class="icon-bar"></span>
-     <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#">Планирование закупок</a>
-   </div>
-
-   <!-- Collect the nav links, forms, and other content for toggling -->
-   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    <ul class="nav navbar-nav">
-     <li role="presentation"@if(request.path == routes.HomeController.index.toString()){ class="active"}><a href="@routes.HomeController.index">По папкам</a></li>
-     <li role="presentation"@if(request.path == routes.HomeController.buy.toString()){ class="active"}><a href="@routes.HomeController.buy">По закупочной категории</a></li>
-     <li role="presentation"@if(request.path == routes.HomeController.manufacture.toString()){ class="active"}><a href="@routes.HomeController.manufacture">По производителю</a></li>
-    </ul>
-   </div>
-  </div>
- </nav>
-
- <h1>@size видов товаров в наличии</h1>
+ <h3>@size видов товаров в наличии</h3>
  <table class="table table-hover">
   <thead>
   <tr>

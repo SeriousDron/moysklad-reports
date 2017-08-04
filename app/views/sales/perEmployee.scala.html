@@ -5,7 +5,7 @@
 
 @main("Производительность продавцов") {
 
-    <h1>Производительность продавцов за 2 недели</h1>
+    <h3>Производительность продавцов за 2 недели</h3>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -22,7 +22,7 @@
                 <td>@{stat.employee.name}</td>
                 <td>@{"%.3f".format(stat.avgQuantity)}</td>
                 <td>@{stat.avgSum.moneyFormat}</td>
-                <td>@{stat.totalSales.moneyFormat}</td>
+                <td>@{stat.totalSales}</td>
                 <td>@{stat.totalSum.moneyFormat}</td>
             </tr>
         }
