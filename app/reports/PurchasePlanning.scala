@@ -26,7 +26,7 @@ class PurchasePlanning @Inject() (moyskladApi: MoyskladAPI, productRegistry: Pro
       sales <- salesStat
     } yield {
       for {
-        folder: T <- (stocks.keySet ++ sales.keySet).toSeq
+        folder <- (stocks.keySet ++ sales.keySet).toSeq
       } yield FolderStat(folder, stocks(folder)._1, stocks(folder)._2, sales(folder))
     }
   }
