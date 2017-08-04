@@ -1,0 +1,31 @@
+@import reports.EmployeeStat
+@import views.MoneyInt._
+
+@(stats: Seq[EmployeeStat])
+
+@main("Производительность продавцов") {
+
+    <h1>Производительность продавцов за 2 недели</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Товаров в чеке в среднем</th>
+                <th>Средний чек</th>
+                <th>Всего продаж</th>
+                <th>Сумма продаж</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(stat: EmployeeStat <- stats) {
+            <tr>
+                <td>@{stat.employee.name}</td>
+                <td>@{"%.3f".format(stat.avgQuantity)}</td>
+                <td>@{stat.avgSum.moneyFormat}</td>
+                <td>@{stat.totalSales.moneyFormat}</td>
+                <td>@{stat.totalSum.moneyFormat}</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

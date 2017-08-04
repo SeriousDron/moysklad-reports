@@ -4,6 +4,7 @@ import java.time.LocalDate
 import javax.inject._
 
 import play.api.mvc._
+import reports.EmployeePerformance
 import services.moysklad.documents.RetailDemandRequest
 import services.{Counter, Moysklad}
 
@@ -16,7 +17,7 @@ import scala.concurrent.ExecutionContext
  * object is injected by the Guice dependency injection system.
  */
 @Singleton
-class SalesController @Inject()(api: Moysklad)(implicit exec: ExecutionContext) extends Controller {
+class SalesController @Inject()(api: Moysklad, employeePerformance: EmployeePerformance)(implicit exec: ExecutionContext) extends Controller {
 
   /**
     * Create an action that responds with the [[Counter]]'s current
@@ -27,8 +28,13 @@ class SalesController @Inject()(api: Moysklad)(implicit exec: ExecutionContext) 
     api.getRetailDemand(new RetailDemandRequest(LocalDate.of(2017, 4, 1))).map(response => {
       val total = response.rows.size
       val res = response.rows.groupBy(_.moment.getHour).mapValues(_.size).toSeq.sortWith(_._1 < _._1).mkString("\n")
-      Ok(s"${res}\n Total: $total")
+      Ok(s"$res\n Total: $total")
     })
   }
 
+  def perEmployee = Action.async { implicit request =>
+    employeePerformance.buildReport().map { res =>
+      Ok(views.html.sales.perEmployee(res))
+    }
+  }
 }
