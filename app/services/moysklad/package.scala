@@ -1,7 +1,8 @@
 package services
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.chrono.IsoChronology
+import java.time.{LocalDate, LocalDateTime}
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder, ResolverStyle}
 import java.time.temporal.TemporalAccessor
 
 import play.api.libs.json._
@@ -56,4 +57,12 @@ package object moysklad {
       JsSuccess(PagedResponse(meta, rows))
     }
   }
+
+  implicit val momentReads: Reads[LocalDateTime] = localDateTimeReads(new DateTimeFormatterBuilder()
+    .parseCaseInsensitive
+    .append(DateTimeFormatter.ISO_LOCAL_DATE)
+    .appendLiteral(' ')
+    .append(DateTimeFormatter.ISO_LOCAL_TIME)
+    .toFormatter()
+  )
 }

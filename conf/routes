@@ -7,7 +7,7 @@ GET     /                           controllers.HomeController.index
 GET     /buy                        controllers.HomeController.buy
 GET     /manufacture                controllers.HomeController.manufacture
 # An example controller showing how to use dependency injection
-GET     /count                      controllers.CountController.count
+GET     /sales/per-hour             controllers.SalesController.perHour
 # An example controller showing how to write asynchronous code
 GET     /message                    controllers.AsyncController.message
 

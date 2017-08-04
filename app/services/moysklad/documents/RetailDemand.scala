@@ -1,7 +1,7 @@
 package services.moysklad.documents
 
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 import play.api.libs.json.{Json, Reads}
 import services.moysklad._
@@ -22,7 +22,7 @@ class RetailDemandRequest(updatedFrom: LocalDate, updatedTo: LocalDate = LocalDa
 }
 
 case class Position(assortment: WrappedMeta, price: Int, quantity: Int)
-case class RetailDemand(id: String, positions: PagedResponse[Position])
+case class RetailDemand(id: String, positions: PagedResponse[Position], moment: LocalDateTime)
 
 object RetailDemand {
   implicit val positionReads: Reads[Position] = Json.reads[Position]
