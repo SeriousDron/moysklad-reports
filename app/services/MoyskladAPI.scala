@@ -18,6 +18,7 @@ trait Moysklad {
   def getProducts(request: ProductsRequest): Future[PagedResponse[Product]]
   def getProductsMetadata(request: ProductMetadataRequest): Future[ProductMetadata]
   def getFolders(request: FoldersRequest): Future[PagedResponse[Folder]]
+  def getEmployees(request: EmployeeRequest): Future[PagedResponse[Employee]]
 }
 
 
@@ -48,6 +49,10 @@ extends Moysklad
   }
 
   override def getFolders(req: FoldersRequest = FoldersRequest()) : Future[PagedResponse[Folder]] = {
+    all(req)
+  }
+
+  override def getEmployees(req: EmployeeRequest = EmployeeRequest()): Future[PagedResponse[Employee]] = {
     all(req)
   }
 

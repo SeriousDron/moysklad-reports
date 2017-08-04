@@ -3,7 +3,7 @@ import java.time.Clock
 
 import play.api.{Configuration, Environment}
 import services._
-import services.moysklad.registry.{FolderRegistry, FolderRegistryImpl, ProductRegistry, ProductRegistryImpl}
+import services.moysklad.registry._
 import services.moysklad.Auth
 
 /**
@@ -40,6 +40,7 @@ class Module(
 
     bind(classOf[ProductRegistry]).to(classOf[ProductRegistryImpl]).asEagerSingleton()
     bind(classOf[FolderRegistry]).to(classOf[FolderRegistryImpl]).asEagerSingleton()
+    bind(classOf[EmployeeRegistry]).to(classOf[EmployeeRegistryImpl]).asEagerSingleton()
   }
 
 }

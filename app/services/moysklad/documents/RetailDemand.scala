@@ -22,7 +22,7 @@ class RetailDemandRequest(updatedFrom: LocalDate, updatedTo: LocalDate = LocalDa
 }
 
 case class Position(assortment: WrappedMeta, price: Int, quantity: Int)
-case class RetailDemand(id: String, positions: PagedResponse[Position], moment: LocalDateTime)
+case class RetailDemand(id: String, sum: Int, positions: PagedResponse[Position], moment: LocalDateTime, owner: WrappedMeta)
 
 object RetailDemand {
   implicit val positionReads: Reads[Position] = Json.reads[Position]

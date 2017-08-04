@@ -12,7 +12,7 @@ abstract class Registry[E <: Entity](fetchAllFunc: => Future[PagedResponse[E]]) 
   private var items: Map[String, E] = refreshItems()
 
   private def refreshItems(): Map[String, E] = {
-    val response: PagedResponse[E] = Await.result(fetchAllFunc, 30.seconds)
+    val response: PagedResponse[E] = Await.result(fetchAllFunc, 300.seconds)
     response.rows.map(p => (p.meta.href, p)).toMap
   }
 
