@@ -42,6 +42,12 @@ class HomeController @Inject()(
     buildReport(grouping)
   }
 
+  def shelf:Action[AnyContent] = Action.async { implicit request =>
+
+    val grouping = new CustomEntityAttributeGroup("Сортовая полка")
+    buildReport(grouping)
+  }
+
   private def buildReport[T](grouping: ProductGroup[T])(implicit request: Request[AnyContent]) = {
     purchasePlanning.buildReport(grouping).map(report => Ok(
       views.html.index.render(

@@ -9,9 +9,10 @@
  <h2>Планирование закупок</h2>
  <div class="container-fluid">
    <ul class="nav nav-pills">
-    <li role="presentation"@if(request.path == routes.HomeController.index.toString()){ class="active"}><a href="@routes.HomeController.index">По папкам</a></li>
-    <li role="presentation"@if(request.path == routes.HomeController.buy.toString()){ class="active"}><a href="@routes.HomeController.buy">По закупочной категории</a></li>
-    <li role="presentation"@if(request.path == routes.HomeController.manufacture.toString()){ class="active"}><a href="@routes.HomeController.manufacture">По производителю</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.index.toString){ class="active"}><a href="@routes.HomeController.index">По папкам</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.buy.toString){ class="active"}><a href="@routes.HomeController.buy">По закупочной категории</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.manufacture.toString){ class="active"}><a href="@routes.HomeController.manufacture">По производителю</a></li>
+    <li role="presentation"@if(request.path == routes.HomeController.shelf.toString){ class="active"}><a href="@routes.HomeController.shelf">По сортовой полке</a></li>
    </ul>
  </div>
 

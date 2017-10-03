@@ -6,6 +6,7 @@
 GET     /                           controllers.HomeController.index
 GET     /buy                        controllers.HomeController.buy
 GET     /manufacture                controllers.HomeController.manufacture
+GET     /shelf                      controllers.HomeController.shelf
 # An example controller showing how to use dependency injection
 GET     /sales/per-hour             controllers.SalesController.perHour
 GET     /sales/per-employee         controllers.SalesController.perEmployee
