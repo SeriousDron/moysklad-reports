@@ -13,6 +13,7 @@ object Attribute {
 
   final val TypeBoolean = "boolean"
   final val TypeCustomEntity = "customentity"
+  final val TypeString = "string"
 
   implicit val customEntityAttributeReads: Reads[CustomEntityValue] = Json.reads[CustomEntityValue]
 
@@ -23,6 +24,7 @@ object Attribute {
       objType match {
         case TypeBoolean => JsSuccess(BooleanAttribute(objType, name, (json \ "value").as[Boolean]))
         case TypeCustomEntity => JsSuccess(CustomEntityAttribute(objType, name, (json \ "value").as[CustomEntityValue]))
+        case TypeString => JsSuccess(StringAttribute(objType, name, (json \ "value").as[String]))
       }
     }
   }
@@ -31,3 +33,4 @@ object Attribute {
 case class CustomEntityValue(meta: Meta, name: String)
 case class CustomEntityAttribute(objType: String, name: String, value: CustomEntityValue) extends Attribute
 case class BooleanAttribute(objType: String, name: String, value: Boolean) extends Attribute
+case class StringAttribute(objType: String, name: String, value: String) extends Attribute
