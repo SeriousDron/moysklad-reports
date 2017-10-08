@@ -11,7 +11,8 @@ GET     /shelf                      controllers.HomeController.shelf
 GET     /sales/per-hour             controllers.SalesController.perHour
 GET     /sales/per-employee         controllers.SalesController.perEmployee
 # Egais reports
-GET     /egais                      controllers.EgaisController.stock
+GET     /egais                      controllers.EgaisController.stock(date: String = "now")
+GET     /egais/:date                controllers.EgaisController.stock(date: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

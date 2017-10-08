@@ -5,7 +5,7 @@ import javax.inject.Inject
 import services.Moysklad
 import services.moysklad.entity.{Product, StringAttribute}
 import services.moysklad.registry.ProductRegistry
-import services.moysklad.reports.Stock
+import services.moysklad.reports.{Stock, StockRequest}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -16,8 +16,8 @@ class EgaisStock @Inject()(moysklad: Moysklad, productRegistry: ProductRegistry)
   type EgaisKey = (String, String)
   type StockProduct = (Stock, Product)
 
-  def buildReport(): Future[Map[EgaisKey, Float]] = {
-    moysklad.getStocks().map(stocks => {
+  def buildReport(stockRequest: StockRequest = StockRequest()): Future[Map[EgaisKey, Float]] = {
+    moysklad.getStocks(stockRequest).map(stocks => {
       val alcoholicProductsStock: Seq[StockProduct] = stocks.rows.map(s => (s, productRegistry(s.meta.href))).filter(_._2.alcoholic.isDefined)
       val grouped: Map[EgaisKey, Seq[StockProduct]] = alcoholicProductsStock.groupBy(stockToKey)
       grouped.mapValues(_.map(stockProductToDeciliters).sum)
