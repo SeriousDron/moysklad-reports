@@ -1,0 +1,4 @@
+@(stocks: Map[(String, String), Float])@import views.EgaisFloat
+ManufactureCode, Type, Volume
+@for(stock <- stocks) {@stock._1._1,@stock._1._2,@{EgaisFloat.format(stock._2)}
+}

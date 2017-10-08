@@ -1,5 +1,7 @@
 package reports
 
+import javax.inject.Inject
+
 import services.Moysklad
 import services.moysklad.entity.{Product, StringAttribute}
 import services.moysklad.registry.ProductRegistry
@@ -10,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by seriousdron on 07.10.17.
   */
-class EgaisStock(moysklad: Moysklad, productRegistry: ProductRegistry)(implicit ec: ExecutionContext) {
+class EgaisStock @Inject()(moysklad: Moysklad, productRegistry: ProductRegistry)(implicit ec: ExecutionContext) {
   type EgaisKey = (String, String)
   type StockProduct = (Stock, Product)
 
@@ -32,8 +34,8 @@ class EgaisStock(moysklad: Moysklad, productRegistry: ProductRegistry)(implicit 
   }
 
   def stockProductToDeciliters(sp: StockProduct): Float = {
-    val quantity = sp._1.quantity.toFloat
-    val volume = sp._2.alcoholic.flatMap(_.volume).get
+    val quantity: Int = sp._1.quantity
+    val volume: Float = sp._2.alcoholic.flatMap(_.volume).getOrElse(0f)
     quantity * volume / 10f
   }
 }
